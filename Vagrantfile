@@ -22,6 +22,16 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # accessing "localhost:8080" will access port 80 on the guest machine.
   # config.vm.network "forwarded_port", guest: 80, host: 8080
 
+  # Forward CouchDB
+  config.vm.network "forwarded_port", guest: 5984, host: 5984
+
+  # Forward Neo4j
+  config.vm.network "forwarded_port", guest: 7474, host: 7474
+
+  # Forward ElasticSearch
+  config.vm.network "forwarded_port", guest: 9200, host: 9200
+
+
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
   # config.vm.network "private_network", ip: "192.168.33.10"
