@@ -133,7 +133,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.ssh.pty = true # https://github.com/mitchellh/vagrant/issues/1673
 
   # Get the base system up to date
-  config.vm.provision "shell", inline: "sudo apt-get update && sudo apt-get -y upgrade"
+  config.vm.provision "shell", inline: "sudo apt-get update"
 
   # Install Java and Maven
   config.vm.provision "shell", inline: "sudo apt-get install -y openjdk-7-jdk maven && echo 'export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64' >> ~.profile"
@@ -163,5 +163,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provision "shell", inline: "echo 'deb http://packages.elasticsearch.org/elasticsearch/1.1/debian stable main' | sudo tee -a /etc/apt/sources.list"
   config.vm.provision "shell", inline: "gpg --keyserver pgp.mit.edu --recv-keys D27D666CD88E42B4 && gpg --export --armor D27D666CD88E42B4 | sudo apt-key add -"
   config.vm.provision "shell", inline: "sudo apt-get update && sudo apt-get install -y elasticsearch"
+
+  # Only upgrade in the end since the system might hang otherwise
+  config.vm.provision "shell", inline: "sudo apt-get -y upgrade"
 
 end
