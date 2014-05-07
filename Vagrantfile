@@ -9,7 +9,7 @@ VAGRANTFILE_API_VERSION = "2"
 $script = <<SCRIPT
 
 echo Get the base system up to date
-sudo apt-get update && sudo apt-get -y upgrade
+sudo apt-get update
 
 if [ $(dpkg-query -W -f='${Status}' openjdk-7-jdk 2>/dev/null | grep -c "ok installed") -eq 0 ];
 then
