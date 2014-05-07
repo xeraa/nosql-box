@@ -4,6 +4,48 @@
 # Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
 VAGRANTFILE_API_VERSION = "2"
 
+
+# Our custom installation routine
+$script = <<SCRIPT
+
+echo Get the base system up to date
+sudo apt-get update && sudo apt-get -y upgrade
+
+echo Install Java and Maven
+sudo apt-get install -y openjdk-7-jdk maven && echo 'export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64' >> ~.profile
+
+echo Install Redis
+sudo apt-get install -y redis-server
+
+echo Install MongoDB
+sudo apt-get install mongodb
+
+echo Install CouchDB
+sudo apt-get install couchdb
+
+echo Install Cassandra
+echo 'deb http://www.apache.org/dist/cassandra/debian 20x main' | sudo tee -a /etc/apt/sources.list
+echo 'deb-src http://www.apache.org/dist/cassandra/debian 20x main' | sudo tee -a /etc/apt/sources.list
+gpg --keyserver pgp.mit.edu --recv-keys 4BD736A82B5C1B00 && gpg --export --armor 4BD736A82B5C1B00 | sudo apt-key add -
+gpg --keyserver pgp.mit.edu --recv-keys 2B5C1B00 && gpg --export --armor 2B5C1B00 | sudo apt-key add -
+sudo apt-get update && sudo apt-get install -y cassandra
+
+echo Install Neo4j
+echo 'deb http://debian.neo4j.org/repo stable/' | sudo tee -a /etc/apt/sources.list
+gpg --keyserver pgp.mit.edu --recv-keys B73A5F962DC499C3 && gpg --export --armor B73A5F962DC499C3 | sudo apt-key add -
+sudo apt-get update && sudo apt-get install -y neo4j
+
+echo Install ElasticSearch
+echo 'deb http://packages.elasticsearch.org/elasticsearch/1.1/debian stable main' | sudo tee -a /etc/apt/sources.list
+gpg --keyserver pgp.mit.edu --recv-keys D27D666CD88E42B4 && gpg --export --armor D27D666CD88E42B4 | sudo apt-key add -
+sudo apt-get update && sudo apt-get install -y elasticsearch
+
+echo All done...
+
+SCRIPT
+
+
+
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # All Vagrant configuration is done here. The most common configuration
   # options are documented and commented below. For a complete reference,
@@ -130,41 +172,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   #
   #   chef.validation_client_name = "ORGNAME-validator"
 
+
   config.ssh.pty = true # https://github.com/mitchellh/vagrant/issues/1673
 
-  # Get the base system up to date
-  config.vm.provision "shell", inline: "sudo apt-get update"
-
-  # Install Java and Maven
-  config.vm.provision "shell", inline: "sudo apt-get install -y openjdk-7-jdk maven && echo 'export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64' >> ~.profile"
-
-  # Install Redis
-  config.vm.provision "shell", inline: "sudo apt-get install -y redis-server"
-
-  # Install MongoDB
-  config.vm.provision "shell", inline: "sudo apt-get install mongodb"
-
-  # Install CouchDB
-  config.vm.provision "shell", inline: "sudo apt-get install couchdb"
-
-  # Install Cassandra
-  config.vm.provision "shell", inline: "echo 'deb http://www.apache.org/dist/cassandra/debian 20x main' | sudo tee -a /etc/apt/sources.list"
-  config.vm.provision "shell", inline: "echo 'deb-src http://www.apache.org/dist/cassandra/debian 20x main' | sudo tee -a /etc/apt/sources.list"
-  config.vm.provision "shell", inline: "gpg --keyserver pgp.mit.edu --recv-keys 4BD736A82B5C1B00 && gpg --export --armor 4BD736A82B5C1B00 | sudo apt-key add -"
-  config.vm.provision "shell", inline: "gpg --keyserver pgp.mit.edu --recv-keys 2B5C1B00 && gpg --export --armor 2B5C1B00 | sudo apt-key add -"
-  config.vm.provision "shell", inline: "sudo apt-get update && sudo apt-get install -y cassandra"
-
-  # Install Neo4j
-  config.vm.provision "shell", inline: "echo 'deb http://debian.neo4j.org/repo stable/' | sudo tee -a /etc/apt/sources.list"
-  config.vm.provision "shell", inline: "gpg --keyserver pgp.mit.edu --recv-keys B73A5F962DC499C3 && gpg --export --armor B73A5F962DC499C3 | sudo apt-key add -"
-  config.vm.provision "shell", inline: "sudo apt-get update && sudo apt-get install -y neo4j"
-
-  # Install ElasticSearch
-  config.vm.provision "shell", inline: "echo 'deb http://packages.elasticsearch.org/elasticsearch/1.1/debian stable main' | sudo tee -a /etc/apt/sources.list"
-  config.vm.provision "shell", inline: "gpg --keyserver pgp.mit.edu --recv-keys D27D666CD88E42B4 && gpg --export --armor D27D666CD88E42B4 | sudo apt-key add -"
-  config.vm.provision "shell", inline: "sudo apt-get update && sudo apt-get install -y elasticsearch"
-
-  # Only upgrade in the end since the system might hang otherwise
-  config.vm.provision "shell", inline: "sudo apt-get -y upgrade"
+  # Install our dependencies
+  config.vm.provision "shell", inline: $script
 
 end
