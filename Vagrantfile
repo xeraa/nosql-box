@@ -18,10 +18,10 @@ echo Install Redis
 sudo apt-get install -y redis-server
 
 echo Install MongoDB
-sudo apt-get install mongodb
+sudo apt-get install -y mongodb
 
 echo Install CouchDB
-sudo apt-get install couchdb
+sudo apt-get install -y couchdb
 
 echo Install Cassandra
 echo 'deb http://www.apache.org/dist/cassandra/debian 20x main' | sudo tee -a /etc/apt/sources.list
