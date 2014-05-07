@@ -60,6 +60,7 @@ then
   echo 'deb http://packages.elasticsearch.org/elasticsearch/1.1/debian stable main' | sudo tee -a /etc/apt/sources.list
   gpg --keyserver pgp.mit.edu --recv-keys D27D666CD88E42B4 && gpg --export --armor D27D666CD88E42B4 | sudo apt-key add -
   sudo apt-get update && sudo apt-get install -y elasticsearch
+  sudo update-rc.d elasticsearch defaults
 fi
 
 echo All done...
