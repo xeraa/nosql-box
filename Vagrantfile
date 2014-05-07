@@ -12,7 +12,7 @@ echo Get the base system up to date
 sudo apt-get update && sudo apt-get -y upgrade
 
 echo Install Java and Maven
-sudo apt-get install -y openjdk-7-jdk maven && echo 'export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64' >> ~.profile
+sudo apt-get install -y openjdk-7-jdk maven && echo 'export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64' >> ~/.profile
 
 echo Install Redis
 sudo apt-get install -y redis-server
