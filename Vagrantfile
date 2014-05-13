@@ -83,17 +83,23 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # accessing "localhost:8080" will access port 80 on the guest machine.
   # config.vm.network "forwarded_port", guest: 80, host: 8080
 
+  # Forward Redis
+  config.vm.network "forwarded_port", guest: 6379, host: 6379
+
+  # Forward MongoDB
+  config.vm.network "forwarded_port", guest: 27017, host: 27017
+
   # Forward CouchDB
   config.vm.network "forwarded_port", guest: 5984, host: 5984
+
+  # Forward Cassandra
+  config.vm.network "forwarded_port", guest: 9042, host: 9042
 
   # Forward Neo4j
   config.vm.network "forwarded_port", guest: 7474, host: 7474
 
   # Forward ElasticSearch
   config.vm.network "forwarded_port", guest: 9200, host: 9200
-
-  # Forward MongoDB
-  config.vm.network "forwarded_port", guest: 27017, host: 27017
 
 
   # Provider-specific configuration so you can fine-tune various
