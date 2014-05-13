@@ -21,18 +21,21 @@ if [ $(dpkg-query -W -f='${Status}' redis-server 2>/dev/null | grep -c "ok insta
 then
   echo Install Redis
   sudo apt-get install -y redis-server
+  sudo update-rc.d -f redis-server remove
 fi
 
 if [ $(dpkg-query -W -f='${Status}' mongodb 2>/dev/null | grep -c "ok installed") -eq 0 ];
 then
   echo Install MongoDB
   sudo apt-get install -y mongodb
+  sudo update-rc.d -f mongodb remove
 fi
 
 if [ $(dpkg-query -W -f='${Status}' couchdb 2>/dev/null | grep -c "ok installed") -eq 0 ];
 then
   echo Install CouchDB
   sudo apt-get install -y couchdb
+  sudo update-rc.d -f couchdb remove
 fi
 
 if [ $(dpkg-query -W -f='${Status}' cassandra 2>/dev/null | grep -c "ok installed") -eq 0 ];
@@ -43,6 +46,7 @@ then
   gpg --keyserver pgp.mit.edu --recv-keys 4BD736A82B5C1B00 && gpg --export --armor 4BD736A82B5C1B00 | sudo apt-key add -
   gpg --keyserver pgp.mit.edu --recv-keys 2B5C1B00 && gpg --export --armor 2B5C1B00 | sudo apt-key add -
   sudo apt-get update && sudo apt-get install -y cassandra
+  sudo update-rc.d -f cassandra remove
 fi
 
 if [ $(dpkg-query -W -f='${Status}' neo4j 2>/dev/null | grep -c "ok installed") -eq 0 ];
@@ -52,6 +56,7 @@ then
   gpg --keyserver pgp.mit.edu --recv-keys B73A5F962DC499C3 && gpg --export --armor B73A5F962DC499C3 | sudo apt-key add -
   sudo apt-get update && sudo apt-get install -y neo4j
   echo 'org.neo4j.server.webserver.address=0.0.0.0' | sudo tee -a /etc/neo4j/neo4j-server.properties
+  sudo update-rc.d -f neo4j remove
 fi
 
 if [ $(dpkg-query -W -f='${Status}' elasticsearch 2>/dev/null | grep -c "ok installed") -eq 0 ];
@@ -60,7 +65,6 @@ then
   echo 'deb http://packages.elasticsearch.org/elasticsearch/1.1/debian stable main' | sudo tee -a /etc/apt/sources.list
   gpg --keyserver pgp.mit.edu --recv-keys D27D666CD88E42B4 && gpg --export --armor D27D666CD88E42B4 | sudo apt-key add -
   sudo apt-get update && sudo apt-get install -y elasticsearch
-  sudo update-rc.d elasticsearch defaults 95 10
 fi
 
 echo All done...
