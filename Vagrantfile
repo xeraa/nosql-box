@@ -22,6 +22,7 @@ then
   echo Install Redis
   sudo apt-get install -y redis-server
   sudo update-rc.d -f redis-server remove
+  sudo cp /home/vagrant/logout/configs/redis.conf /etc/redis/redis.conf
 fi
 
 if [ $(dpkg-query -W -f='${Status}' mongodb 2>/dev/null | grep -c "ok installed") -eq 0 ];
@@ -29,6 +30,7 @@ then
   echo Install MongoDB
   sudo apt-get install -y mongodb
   sudo update-rc.d -f mongodb remove
+  sudo cp /home/vagrant/logout/configs/mongodb.conf /etc/mongodb.conf
 fi
 
 if [ $(dpkg-query -W -f='${Status}' couchdb 2>/dev/null | grep -c "ok installed") -eq 0 ];
@@ -36,6 +38,7 @@ then
   echo Install CouchDB
   sudo apt-get install -y couchdb
   sudo update-rc.d -f couchdb remove
+  sudo cp /home/vagrant/logout/configs/local.ini /etc/mongodb.conf
 fi
 
 if [ $(dpkg-query -W -f='${Status}' cassandra 2>/dev/null | grep -c "ok installed") -eq 0 ];
@@ -47,6 +50,7 @@ then
   gpg --keyserver pgp.mit.edu --recv-keys 2B5C1B00 && gpg --export --armor 2B5C1B00 | sudo apt-key add -
   sudo apt-get update && sudo apt-get install -y cassandra
   sudo update-rc.d -f cassandra remove
+  sudo cp /home/vagrant/logout/configs/cassandra.yaml /etc/cassandra/cassandra.yaml
 fi
 
 if [ $(dpkg-query -W -f='${Status}' neo4j 2>/dev/null | grep -c "ok installed") -eq 0 ];
@@ -57,6 +61,7 @@ then
   sudo apt-get update && sudo apt-get install -y neo4j
   echo 'org.neo4j.server.webserver.address=0.0.0.0' | sudo tee -a /etc/neo4j/neo4j-server.properties
   sudo update-rc.d -f neo4j remove
+  sudo cp /home/vagrant/logout/configs/neo4j-server.properties /etc/neo4j/neo4j-server.properties
 fi
 
 if [ $(dpkg-query -W -f='${Status}' elasticsearch 2>/dev/null | grep -c "ok installed") -eq 0 ];
@@ -116,7 +121,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Fox https://github.com/mitchellh/vagrant/issues/1673
   config.ssh.pty = true
 
+
   # Install our dependencies
   config.vm.provision "shell", inline: $script
+
 
 end
