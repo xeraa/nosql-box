@@ -100,7 +100,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.network "forwarded_port", guest: 5984, host: 5984
 
   # Forward Cassandra
-  config.vm.network "forwarded_port", guest: 9042, host: 9042
+  config.vm.network "forwarded_port", guest: 9160, host: 9160
 
   # Forward Neo4j
   config.vm.network "forwarded_port", guest: 7474, host: 7474
