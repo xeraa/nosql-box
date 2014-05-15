@@ -21,18 +21,16 @@ if [ $(dpkg-query -W -f='${Status}' redis-server 2>/dev/null | grep -c "ok insta
 then
   echo Install Redis
   sudo apt-get install -y redis-server
-  sudo update-rc.d -f redis-server remove
-  sudo service redis-server stop
   sudo cp /home/vagrant/logout/configs/redis.conf /etc/redis/redis.conf
+  sudo service redis-server restart
 fi
 
 if [ $(dpkg-query -W -f='${Status}' mongodb 2>/dev/null | grep -c "ok installed") -eq 0 ];
 then
   echo Install MongoDB
   sudo apt-get install -y mongodb
-  sudo update-rc.d -f mongodb remove
-  sudo service mongodb stop
   sudo cp /home/vagrant/logout/configs/mongodb.conf /etc/mongodb.conf
+  sudo service mongodb restart
 fi
 
 if [ $(dpkg-query -W -f='${Status}' couchdb 2>/dev/null | grep -c "ok installed") -eq 0 ];
@@ -40,8 +38,8 @@ then
   echo Install CouchDB
   sudo apt-get install -y couchdb
   sudo cp /home/vagrant/logout/configs/couchdb.conf /etc/init/couchdb.conf
-  sudo service couchdb stop
-  sudo cp /home/vagrant/logout/configs/local.ini /etc/local.ini
+  sudo cp /home/vagrant/logout/configs/local.ini /etc/couchdb/local.ini
+  sudo service couchdb restart
 fi
 
 if [ $(dpkg-query -W -f='${Status}' cassandra 2>/dev/null | grep -c "ok installed") -eq 0 ];
@@ -52,9 +50,8 @@ then
   gpg --keyserver pgp.mit.edu --recv-keys 4BD736A82B5C1B00 && gpg --export --armor 4BD736A82B5C1B00 | sudo apt-key add -
   gpg --keyserver pgp.mit.edu --recv-keys 2B5C1B00 && gpg --export --armor 2B5C1B00 | sudo apt-key add -
   sudo apt-get update && sudo apt-get install -y --force-yes cassandra
-  sudo update-rc.d -f cassandra remove
-  sudo service cassandra stop
   sudo cp /home/vagrant/logout/configs/cassandra.yaml /etc/cassandra/cassandra.yaml
+  sudo service cassandra restart
 fi
 
 if [ $(dpkg-query -W -f='${Status}' neo4j 2>/dev/null | grep -c "ok installed") -eq 0 ];
@@ -63,9 +60,8 @@ then
   echo 'deb http://debian.neo4j.org/repo stable/' | sudo tee -a /etc/apt/sources.list
   gpg --keyserver pgp.mit.edu --recv-keys B73A5F962DC499C3 && gpg --export --armor B73A5F962DC499C3 | sudo apt-key add -
   sudo apt-get update && sudo apt-get install -y --force-yes neo4j
-  sudo update-rc.d -f neo4j-service remove
-  sudo service neo4j-service stop
   sudo cp /home/vagrant/logout/configs/neo4j-server.properties /etc/neo4j/neo4j-server.properties
+  sudo service neo4j-service restart
 fi
 
 if [ $(dpkg-query -W -f='${Status}' elasticsearch 2>/dev/null | grep -c "ok installed") -eq 0 ];
@@ -74,6 +70,8 @@ then
   echo 'deb http://packages.elasticsearch.org/elasticsearch/1.1/debian stable main' | sudo tee -a /etc/apt/sources.list
   gpg --keyserver pgp.mit.edu --recv-keys D27D666CD88E42B4 && gpg --export --armor D27D666CD88E42B4 | sudo apt-key add -
   sudo apt-get update && sudo apt-get install -y --force-yes elasticsearch
+  sudo update-rc.d elasticsearch defaults 95 10
+  sudo service elasticsearch restart
 fi
 
 echo All done...
