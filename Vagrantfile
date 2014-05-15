@@ -22,6 +22,7 @@ then
   echo Install Redis
   sudo apt-get install -y redis-server
   sudo update-rc.d -f redis-server remove
+  sudo service redis-server stop
   sudo cp /home/vagrant/logout/configs/redis.conf /etc/redis/redis.conf
 fi
 
@@ -30,6 +31,7 @@ then
   echo Install MongoDB
   sudo apt-get install -y mongodb
   sudo update-rc.d -f mongodb remove
+  sudo service mongodb stop
   sudo cp /home/vagrant/logout/configs/mongodb.conf /etc/mongodb.conf
 fi
 
@@ -51,6 +53,7 @@ then
   gpg --keyserver pgp.mit.edu --recv-keys 2B5C1B00 && gpg --export --armor 2B5C1B00 | sudo apt-key add -
   sudo apt-get update && sudo apt-get install -y cassandra
   sudo update-rc.d -f cassandra remove
+  sudo service cassandra stop
   sudo cp /home/vagrant/logout/configs/cassandra.yaml /etc/cassandra/cassandra.yaml
 fi
 
@@ -62,6 +65,7 @@ then
   sudo apt-get update && sudo apt-get install -y neo4j
   echo 'org.neo4j.server.webserver.address=0.0.0.0' | sudo tee -a /etc/neo4j/neo4j-server.properties
   sudo update-rc.d -f neo4j-service remove
+  sudo service neo4j-service stop
   sudo cp /home/vagrant/logout/configs/neo4j-server.properties /etc/neo4j/neo4j-server.properties
 fi
 
