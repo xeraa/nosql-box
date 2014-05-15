@@ -37,8 +37,9 @@ if [ $(dpkg-query -W -f='${Status}' couchdb 2>/dev/null | grep -c "ok installed"
 then
   echo Install CouchDB
   sudo apt-get install -y couchdb
-  sudo update-rc.d -f couchdb remove
-  sudo cp /home/vagrant/logout/configs/local.ini /etc/mongodb.conf
+  sudo cp /home/vagrant/logout/configs/couchdb.conf /etc/init/couchdb.conf
+  sudo service couchdb stop
+  sudo cp /home/vagrant/logout/configs/local.ini /etc/local.ini
 fi
 
 if [ $(dpkg-query -W -f='${Status}' cassandra 2>/dev/null | grep -c "ok installed") -eq 0 ];
@@ -60,7 +61,7 @@ then
   gpg --keyserver pgp.mit.edu --recv-keys B73A5F962DC499C3 && gpg --export --armor B73A5F962DC499C3 | sudo apt-key add -
   sudo apt-get update && sudo apt-get install -y neo4j
   echo 'org.neo4j.server.webserver.address=0.0.0.0' | sudo tee -a /etc/neo4j/neo4j-server.properties
-  sudo update-rc.d -f neo4j remove
+  sudo update-rc.d -f neo4j-service remove
   sudo cp /home/vagrant/logout/configs/neo4j-server.properties /etc/neo4j/neo4j-server.properties
 fi
 
