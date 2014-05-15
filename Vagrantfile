@@ -63,7 +63,6 @@ then
   echo 'deb http://debian.neo4j.org/repo stable/' | sudo tee -a /etc/apt/sources.list
   gpg --keyserver pgp.mit.edu --recv-keys B73A5F962DC499C3 && gpg --export --armor B73A5F962DC499C3 | sudo apt-key add -
   sudo apt-get update && sudo apt-get install -y neo4j
-  echo 'org.neo4j.server.webserver.address=0.0.0.0' | sudo tee -a /etc/neo4j/neo4j-server.properties
   sudo update-rc.d -f neo4j-service remove
   sudo service neo4j-service stop
   sudo cp /home/vagrant/logout/configs/neo4j-server.properties /etc/neo4j/neo4j-server.properties
