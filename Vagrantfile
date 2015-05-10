@@ -11,67 +11,15 @@ $script = <<SCRIPT
 echo Get the base system up to date
 sudo apt-get update && sudo apt-get -y upgrade && sudo apt-get autoclean -y && sudo apt-get autoremove -y
 
-if [ $(dpkg-query -W -f='${Status}' openjdk-7-jdk 2>/dev/null | grep -c "ok installed") -eq 0 ];
-then
-  echo Install Java and Maven
-  sudo apt-get install -y openjdk-7-jdk maven && echo 'export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64' >> ~/.profile
-fi
-
-if [ $(dpkg-query -W -f='${Status}' redis-server 2>/dev/null | grep -c "ok installed") -eq 0 ];
-then
-  echo Install Redis
-  sudo apt-get install -y redis-server
-  sudo cp /home/vagrant/logout/configs/redis.conf /etc/redis/redis.conf
-  sudo service redis-server restart
-fi
-
 if [ $(dpkg-query -W -f='${Status}' mongodb 2>/dev/null | grep -c "ok installed") -eq 0 ];
 then
   echo Install MongoDB
-  sudo apt-get install -y mongodb
-  sudo cp /home/vagrant/logout/configs/mongodb.conf /etc/mongodb.conf
-  sudo service mongodb restart
-fi
-
-if [ $(dpkg-query -W -f='${Status}' couchdb 2>/dev/null | grep -c "ok installed") -eq 0 ];
-then
-  echo Install CouchDB
-  sudo apt-get install -y couchdb
-  sudo cp /home/vagrant/logout/configs/couchdb.conf /etc/init/couchdb.conf
-  sudo cp /home/vagrant/logout/configs/local.ini /etc/couchdb/local.ini
-  sudo service couchdb restart
-fi
-
-if [ $(dpkg-query -W -f='${Status}' cassandra 2>/dev/null | grep -c "ok installed") -eq 0 ];
-then
-  echo Install Cassandra
-  echo 'deb http://www.apache.org/dist/cassandra/debian 20x main' | sudo tee -a /etc/apt/sources.list
-  echo 'deb-src http://www.apache.org/dist/cassandra/debian 20x main' | sudo tee -a /etc/apt/sources.list
-  gpg --keyserver pgp.mit.edu --recv-keys 4BD736A82B5C1B00 && gpg --export --armor 4BD736A82B5C1B00 | sudo apt-key add -
-  gpg --keyserver pgp.mit.edu --recv-keys 2B5C1B00 && gpg --export --armor 2B5C1B00 | sudo apt-key add -
-  sudo apt-get update && sudo apt-get install -y --force-yes cassandra
-  sudo cp /home/vagrant/logout/configs/cassandra.yaml /etc/cassandra/cassandra.yaml
-  sudo service cassandra restart
-fi
-
-if [ $(dpkg-query -W -f='${Status}' neo4j 2>/dev/null | grep -c "ok installed") -eq 0 ];
-then
-  echo Install Neo4j
-  echo 'deb http://debian.neo4j.org/repo stable/' | sudo tee -a /etc/apt/sources.list
-  gpg --keyserver pgp.mit.edu --recv-keys B73A5F962DC499C3 && gpg --export --armor B73A5F962DC499C3 | sudo apt-key add -
-  sudo apt-get update && sudo apt-get install -y --force-yes neo4j
-  sudo cp /home/vagrant/logout/configs/neo4j-server.properties /etc/neo4j/neo4j-server.properties
-  sudo service neo4j-service restart
-fi
-
-if [ $(dpkg-query -W -f='${Status}' elasticsearch 2>/dev/null | grep -c "ok installed") -eq 0 ];
-then
-  echo Install ElasticSearch
-  echo 'deb http://packages.elasticsearch.org/elasticsearch/1.1/debian stable main' | sudo tee -a /etc/apt/sources.list
-  gpg --keyserver pgp.mit.edu --recv-keys D27D666CD88E42B4 && gpg --export --armor D27D666CD88E42B4 | sudo apt-key add -
-  sudo apt-get update && sudo apt-get install -y --force-yes elasticsearch
-  sudo update-rc.d elasticsearch defaults 95 10
-  sudo service elasticsearch restart
+  sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
+  echo "deb http://repo.mongodb.org/apt/ubuntu "$(lsb_release -sc)"/mongodb-org/3.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.0.list
+  sudo apt-get update
+  sudo apt-get install -y mongodb-org
+  sudo apt-get install -y mongodb-org=3.0.2 mongodb-org-server=3.0.2 mongodb-org-shell=3.0.2 mongodb-org-mongos=3.0.2 mongodb-org-tools=3.0.2
+  sudo service mongod start
 fi
 
 echo All done...
