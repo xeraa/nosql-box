@@ -1,2 +1,5 @@
 .vagrant/
 *.swp
+
+# Ignore the packaged box
+*.box
