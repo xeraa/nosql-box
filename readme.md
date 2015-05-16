@@ -1,11 +1,7 @@
-# NoSQL Box
+# MongoDB Box
 
-Vagrant configuration for NoSQL training courses, including:
+Vagrant configuration for MongoDB training courses.
 
-* Redis
-* MongoDB
-* CouchDB
-* Cassandra
-* Neo4j
-* ElasticSearch
+To export the Vagrant box for VirtualBox, run `vagrant package --output mongodb30-ubuntu.box`
 
+There is also a *nosql* branch, containing MongoDB, Redis, ElasticSearch, CouchDB, and Cassandra.
