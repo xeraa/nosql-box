@@ -42,8 +42,14 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # accessing "localhost:8080" will access port 80 on the guest machine.
   # config.vm.network "forwarded_port", guest: 80, host: 8080
 
-  # Forward MongoDB
+  # Forward the MongoDB default port
   config.vm.network "forwarded_port", guest: 27017, host: 27017
+
+  # Forward additional MongoDB ports for replication and sharding
+  config.vm.network "forwarded_port", guest: 27018, host: 27018
+  config.vm.network "forwarded_port", guest: 27019, host: 27019
+  config.vm.network "forwarded_port", guest: 27020, host: 27020
+  config.vm.network "forwarded_port", guest: 27021, host: 27021
 
 
   # Provider-specific configuration so you can fine-tune various
