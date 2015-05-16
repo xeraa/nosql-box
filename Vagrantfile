@@ -7,18 +7,22 @@ VAGRANTFILE_API_VERSION = "2"
 
 # Our custom installation routine
 $script = <<SCRIPT
+set -x
 
 echo Get the base system up to date
 sudo apt-get update && sudo apt-get -y upgrade && sudo apt-get autoclean -y && sudo apt-get autoremove -y
 
-if [ $(dpkg-query -W -f='${Status}' mongodb 2>/dev/null | grep -c "ok installed") -eq 0 ];
+echo Fix the locale
+sudo locale-gen UTF-8
+
+if [ $(dpkg-query -W -f='${Status}' mongodb-org 2>/dev/null | grep -c "ok installed") -eq 0 ];
 then
   echo Install MongoDB
   sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
   echo "deb http://repo.mongodb.org/apt/ubuntu "$(lsb_release -sc)"/mongodb-org/3.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.0.list
   sudo apt-get update
   sudo apt-get install -y mongodb-org
-  sudo apt-get install -y mongodb-org=3.0.2 mongodb-org-server=3.0.2 mongodb-org-shell=3.0.2 mongodb-org-mongos=3.0.2 mongodb-org-tools=3.0.2
+  sudo apt-get install -y mongodb-org=3.0.3 mongodb-org-server=3.0.3 mongodb-org-shell=3.0.3 mongodb-org-mongos=3.0.3 mongodb-org-tools=3.0.3
   sudo service mongod start
 fi
 
@@ -38,23 +42,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # accessing "localhost:8080" will access port 80 on the guest machine.
   # config.vm.network "forwarded_port", guest: 80, host: 8080
 
-  # Forward Redis
-  config.vm.network "forwarded_port", guest: 6379, host: 6379
-
   # Forward MongoDB
   config.vm.network "forwarded_port", guest: 27017, host: 27017
-
-  # Forward CouchDB
-  config.vm.network "forwarded_port", guest: 5984, host: 5984
-
-  # Forward Cassandra
-  config.vm.network "forwarded_port", guest: 9160, host: 9160
-
-  # Forward Neo4j
-  config.vm.network "forwarded_port", guest: 7474, host: 7474
-
-  # Forward ElasticSearch
-  config.vm.network "forwarded_port", guest: 9200, host: 9200
 
 
   # Provider-specific configuration so you can fine-tune various
@@ -64,12 +53,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provider "virtualbox" do |vb|
 
     # Use VBoxManage to customize the VM.
-    vb.customize ["modifyvm", :id, "--memory", "1024"]
+    vb.customize ["modifyvm", :id, "--memory", "512"]
   end
-
-
-  # Fox https://github.com/mitchellh/vagrant/issues/1673
-  config.ssh.pty = true
 
 
   # Install our dependencies
