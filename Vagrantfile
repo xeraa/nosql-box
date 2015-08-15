@@ -13,7 +13,9 @@ echo Get the base system up to date
 sudo apt-get update && sudo apt-get -y upgrade && sudo apt-get autoclean -y && sudo apt-get autoremove -y
 
 echo Fix the locale
-sudo locale-gen UTF-8
+export LC_ALL="en_US.UTF-8"
+export LC_TYPE="UTF-8"
+sudo dpkg-reconfigure locales
 
 if [ $(dpkg-query -W -f='${Status}' mongodb-org 2>/dev/null | grep -c "ok installed") -eq 0 ];
 then
