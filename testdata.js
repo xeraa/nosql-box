@@ -3,7 +3,7 @@
  */
 
 // Change to get the intended number of documents
-var documents = Math.random() * 100000;
+var documents = 200000;
 
 // Change to get the intended number of documents
 var comments = Math.random() * 300000;
@@ -39,8 +39,11 @@ for(i = 0; i < documents; i++) {
      // Generate a random date
      var posted = new Date(ISODate().getTime() - 1000 * 60 * 60 * (ISODate().getTime() % 300));
 
+     // Generate a random number of views
+     var views = Math.floor(Math.random() * 10000);
+
      // Insert the data
-     db.blogposts.insert({ "number": i, "name": name, "url": url, "posted": posted, "text": text });
+     db.blogposts.insert({ "number": i, "name": name, "url": url, "posted": posted, "text": text, "views": views });
 }
 
 // Generate and insert the comments
@@ -58,3 +61,4 @@ for(i = 0; i < comments; i++) {
 
 print("Blog posts inserted: " + db.blogposts.count());
 print("Comments inserted: " + db.comments.count());
+
