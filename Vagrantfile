@@ -51,6 +51,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.network "forwarded_port", guest: 27020, host: 27020
   config.vm.network "forwarded_port", guest: 27021, host: 27021
 
+  # Forward the HTTP Interface
+  config.vm.network "forwarded_port", guest: 28017, host: 28017
+  config.vm.network "forwarded_port", guest: 28018, host: 28018
+
 
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
